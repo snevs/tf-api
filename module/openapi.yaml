@@ -1,0 +1,41 @@
+openapi: 3.0.3
+
+info:
+  title: Helloworld API
+  description: openapi def for helloworld API
+  version: 0.1.0
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+
+paths:
+  /hello:
+    get:
+      operationId: sayHello
+      description: say hello
+
+      parameters:
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/${get_lambda_arn}/invocations"
+        #uri: "arn:aws:lambda:us-east-1:757452749223:function:sayhello"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        timeoutInMillis: ${lambda_identity_timeout}
+        type: "aws"
+        contentHandling: "CONVERT_TO_TEXT"
+      x-amazon-apigateway-auth:
+        type: "NONE"
+      x-amazon-apigateway-api-key-source: "HEADER"
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
