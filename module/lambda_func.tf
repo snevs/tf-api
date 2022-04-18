@@ -10,7 +10,7 @@ resource "aws_lambda_function" "sayhello" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda-group" {
-  name              = aws_lambda_function.sayhello.function_name
+  name              = "/aws/lambda/${aws_lambda_function.sayhello.function_name}"
   retention_in_days = 14
 }
 
